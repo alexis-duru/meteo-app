@@ -30,8 +30,11 @@ import Results from './pages/Results';
 import Data from './services/Api';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
 const Stack = createNativeStackNavigator();
+
+const Tab = createBottomTabNavigator();
 
 function App(): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
@@ -44,11 +47,11 @@ function App(): JSX.Element {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Home">
-        <Stack.Screen name="HOME" component={Homepage} />
-        <Stack.Screen name="SEARCH" component={Search} />
-        <Stack.Screen name="RESULTS" component={Results} />
-      </Stack.Navigator>
+      <Tab.Navigator initialRouteName="Home">
+        <Tab.Screen name="HOME" component={Homepage} />
+        <Tab.Screen name="SEARCH" component={Search} />
+        <Tab.Screen name="RESULTS" component={Results} />
+      </Tab.Navigator>
     </NavigationContainer>
   );
 }

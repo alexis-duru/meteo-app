@@ -23,7 +23,7 @@ const Homepage = () => {
               <Text style={styles.sectionDescription}>
                 This is the homepage.
               </Text>
-              <Button title="Search" onPress={() => navigate('SEARCH')} />
+              {/* <Button title="Search" onPress={() => navigate('SEARCH')} /> */}
             </View>
           </ScrollView>
         </SafeAreaView>
