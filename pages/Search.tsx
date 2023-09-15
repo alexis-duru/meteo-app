@@ -8,7 +8,6 @@ const Search = () => {
     <>
       <View>
         <Text>Search</Text>
-        {/* <Button title="Results" onPress={() => navigate('RESULTS')} /> */}
       </View>
     </>
   );
