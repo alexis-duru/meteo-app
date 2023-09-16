@@ -27,6 +27,7 @@ import {
 import Homepage from './pages/Home';
 import Search from './pages/Search';
 import Results from './pages/Results';
+import Splashscreen from './pages/Splashcreen';
 import Data from './services/Api';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
@@ -47,7 +48,12 @@ function App(): JSX.Element {
 
   return (
     <NavigationContainer>
-      <Tab.Navigator initialRouteName="Home">
+      <Tab.Navigator
+        initialRouteName="Splashscreen"
+        screenOptions={{
+          headerShown: false,
+        }}>
+        <Tab.Screen name="SPLASHSCREEN" component={Splashscreen} />
         <Tab.Screen name="HOME" component={Homepage} />
         <Tab.Screen name="SEARCH" component={Search} />
         <Tab.Screen name="RESULTS" component={Results} />
