@@ -72,7 +72,9 @@ const Homepage = () => {
 const styles = StyleSheet.create({
   sectionContainer: {
     paddingHorizontal: 24,
-    height: 500,
+    height: 600,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   sectionTitle: {
     fontSize: 24,

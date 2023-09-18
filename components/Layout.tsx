@@ -12,7 +12,6 @@ const Layout: React.FC<LayoutProps> = ({children}) => {
     <View style={styles.container}>
       <Header />
       <View style={styles.content}>{children}</View>
-      {/* <Footer /> */}
     </View>
   );
 };
