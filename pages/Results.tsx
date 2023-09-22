@@ -1,8 +1,11 @@
 import React from 'react';
 import {View, Text, Image, StyleSheet, ScrollView} from 'react-native';
+import formatedDateToFrench from '../utils/formatedDateToFrench';
 
 const Results = ({route}: any) => {
   const {weatherData} = route.params;
+
+  console.log('Données météorologiques :', weatherData);
 
   const groupDataByDay = (data: any[]) => {
     const groupedData: {[key: string]: any[]} = {};
@@ -20,12 +23,17 @@ const Results = ({route}: any) => {
 
   const groupedWeatherData = groupDataByDay(weatherData.list);
 
+  const today = new Date().toISOString().split('T')[0];
+  const todayWeatherData = groupedWeatherData[today];
+
   return (
     <View style={styles.container}>
       <View style={styles.wrapperWeatherDay}>
         <Text>Ville: {weatherData.city.name}</Text>
-        <Text>Date: {weatherData.list[0].dt_txt}</Text>
-        <Text>Température: {weatherData.list[0].main.temp} °C</Text>
+        <Text>Date: {formatedDateToFrench(weatherData.list[0].dt_txt)}</Text>
+        <Text>
+          Température: {(weatherData.list[0].main.temp - 273.15).toFixed(2)} °C
+        </Text>
         <Text>Météo: {weatherData.list[0].weather[0].description}</Text>
         <Image
           source={{
@@ -34,6 +42,32 @@ const Results = ({route}: any) => {
           style={{width: 50, height: 50}}
         />
       </View>
+      {/* <View style={styles.wrapperWeatherNextDays}>
+        <Text>Météo heure par heure pour aujourd'hui</Text>
+        <ScrollView
+          horizontal
+          style={styles.galleryContainer}
+          contentContainerStyle={styles.galleryContent}
+          snapToAlignment="start"
+          decelerationRate="fast"
+          snapToInterval={150}>
+          {todayWeatherData.map((hourlyWeather: any, index: number) => (
+            <View key={index} style={styles.weatherCard}>
+              <Text>Heure: {hourlyWeather.dt_txt.split(' ')[1]}</Text>
+              <Text>
+                Température: {(hourlyWeather.main.temp - 273.15).toFixed(2)} °C
+              </Text>
+              <Text>Météo: {hourlyWeather.weather[0].description}</Text>
+              <Image
+                source={{
+                  uri: `https://openweathermap.org/img/w/${hourlyWeather.weather[0].icon}.png`,
+                }}
+                style={{width: 50, height: 50}}
+              />
+            </View>
+          ))}
+        </ScrollView>
+      </View> */}
       <View style={styles.wrapperWeatherNextDays}>
         <Text>Prévisions météo pour les 7 prochains jours</Text>
         <ScrollView
@@ -47,7 +81,10 @@ const Results = ({route}: any) => {
             ([date, weatherDataByDay]) => (
               <View key={date} style={styles.weatherCard}>
                 <Text>Date: {date}</Text>
-                <Text>Température: {weatherDataByDay[0].main.temp} °C</Text>
+                <Text>
+                  Température:{' '}
+                  {(weatherDataByDay[0].main.temp - 273.15).toFixed(2)} °C
+                </Text>
                 <Text>Météo: {weatherDataByDay[0].weather[0].description}</Text>
                 <Image
                   source={{

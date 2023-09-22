@@ -11,19 +11,20 @@ import {
 import Layout from '../components/Layout';
 import {useNavigation} from '@react-navigation/native';
 import getWeather from '../services/openWeatherApi';
-import getPlaces from '../services/countriesNowApi';
+import getPlaces from '../services/geoGouvApi';
 import React, {useState, useEffect} from 'react';
+import formatedDateToFrench from '../utils/formatedDateToFrench';
 
 const Homepage = () => {
   const [weatherData, setWeatherData] = useState<any>(null);
   const [cityData, setCityData] = useState<any>(null);
-
   const {navigate}: any = useNavigation();
 
   useEffect(() => {
     const fetchWeatherData = async () => {
       try {
         const data = await getWeather('Bordeaux');
+        console.log('Information de Bordeaux:', data);
         setWeatherData(data);
       } catch (error) {
         console.error(
@@ -34,19 +35,6 @@ const Homepage = () => {
     };
 
     fetchWeatherData();
-  }, []);
-
-  useEffect(() => {
-    const fetchCityData = async () => {
-      try {
-        const cityName = 'Paris';
-        const data = await getPlaces(cityName.toUpperCase());
-        console.log('Ville :', data.city);
-      } catch (error) {
-        console.error('Erreur lors de la récupération de la ville :', error);
-      }
-    };
-    fetchCityData();
   }, []);
 
   return (
@@ -60,8 +48,14 @@ const Homepage = () => {
               {weatherData ? (
                 <>
                   <Text>Ville: {weatherData.city.name}</Text>
-                  <Text>Date: {weatherData.list[0].dt_txt}</Text>
-                  <Text>Température: {weatherData.list[0].main.temp} °C</Text>
+                  <Text>
+                    Date: {formatedDateToFrench(weatherData.list[0].dt_txt)}
+                  </Text>
+                  <Text>
+                    {' '}
+                    Température:{' '}
+                    {(weatherData.list[0].main.temp - 273.15).toFixed(2)} °C
+                  </Text>
                   <Text>
                     Météo: {weatherData.list[0].weather[0].description}
                   </Text>

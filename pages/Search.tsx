@@ -9,37 +9,18 @@ import {
   Text,
   View,
 } from 'react-native';
-import getWeather from '../services/openWeatherApi';
-import getPlaces from '../services/countriesNowApi';
+import getPlaces from '../services/geoGouvApi'; // Importez les fonctions depuis api.js
+import getWeather from '../services/openWeatherApi'; // Importez les fonctions depuis api.js
 
 const Search = () => {
   const {navigate}: any = useNavigation();
 
   const [city, setCity] = useState('');
-  const [citiesList, setCitiesList] = useState('');
   const [suggestions, setSuggestions] = useState([]);
 
-  const fetchCitiesList = async () => {
+  const fetchCitiesList = async (cityName: string) => {
     try {
-      const data = await getPlaces(city.toUpperCase());
-      console.log('Fetch City List:', data);
-      const cityNames = data.map((entry: any) => entry.city);
-      setCitiesList(cityNames);
-    } catch (error) {
-      console.error('Erreur lors de la récupération des villes :', error);
-    }
-  };
-
-  useEffect(() => {
-    fetchCitiesList();
-  }, [city]);
-
-  const handleInputChange = async (text: any) => {
-    setCity(text);
-
-    try {
-      const data = await getPlaces(text.toUpperCase());
-      const cityNames = data.map((entry: any) => entry.city);
+      const cityNames = await getPlaces(cityName);
       setSuggestions(cityNames);
     } catch (error) {
       console.error(
@@ -49,9 +30,18 @@ const Search = () => {
     }
   };
 
-  const handleSuggestionSelect = (selectedCity: any) => {
+  useEffect(() => {
+    if (city.length > 0) {
+      fetchCitiesList(city);
+    } else {
+      setSuggestions([]);
+    }
+  }, [city]);
+
+  const handleSuggestionSelect = async (selectedCity: string) => {
     setCity(selectedCity);
     setSuggestions([]);
+    await handleSearch();
   };
 
   const handleSearch = async () => {
@@ -75,22 +65,23 @@ const Search = () => {
           <TextInput
             placeholder="Entrez le nom de la ville"
             value={city}
-            onChangeText={handleInputChange}
+            onChangeText={setCity}
             style={styles.input}
             onSubmitEditing={handleSubmit}
           />
-          <Pressable style={styles.button} onPress={handleSearch}>
+          {/* <Pressable style={styles.button} onPress={handleSearch}>
             <Text style={styles.textButton}>Rechercher</Text>
-          </Pressable>
+          </Pressable> */}
           {suggestions.length > 0 && (
             <FlatList
-              data={suggestions}
-              keyExtractor={(item: any) => item.toString()}
-              renderItem={({item}: any) => (
+              data={suggestions.map((item, index) => ({item, index}))} // Créez une liste d'objets avec index
+              keyExtractor={item => `${item.item}-${item.index}`} // Utilisez la combinaison de nom de ville et d'index unique comme clé
+              renderItem={({item}: {item: {item: string; index: number}}) => (
                 <Pressable
+                  key={`${item.item}-${item.index}`} // Assurez-vous que la clé est unique
                   style={styles.suggestionItem}
-                  onPress={() => handleSuggestionSelect(item)}>
-                  <Text>{item}</Text>
+                  onPress={() => handleSuggestionSelect(item.item)}>
+                  <Text>{item.item}</Text>
                 </Pressable>
               )}
             />
@@ -105,14 +96,13 @@ export default Search;
 
 const styles = StyleSheet.create({
   container: {
-    height: '100%',
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'flex-start',
     backgroundColor: 'lightblue',
   },
   wrapperBtn: {
     width: '100%',
-    height: '100%',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -120,44 +110,29 @@ const styles = StyleSheet.create({
   input: {
     width: 250,
     height: 50,
-    margin: 'auto',
-    alignItems: 'center',
-    justifyContent: 'center',
+    marginVertical: 10,
+    paddingHorizontal: 10,
+    backgroundColor: 'white',
+    borderRadius: 5,
   },
   button: {
     width: 250,
     height: 50,
     backgroundColor: '#000',
-    textAlign: 'center',
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 5,
-    marginTop: 20,
+    marginTop: 10,
   },
   textButton: {
     color: '#FFFFFF',
     fontSize: 18,
     fontWeight: 'bold',
-    padding: 10,
-    textAlign: 'center',
-  },
-  suggestionsContainer: {
-    position: 'absolute',
-    top: 60,
-    left: 10,
-    width: '90%',
-    backgroundColor: 'white',
-    zIndex: 1,
-    borderRadius: 5,
-    elevation: 4,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.2,
-    shadowRadius: 2,
   },
   suggestionItem: {
     padding: 10,
     borderBottomWidth: 1,
     borderBottomColor: 'lightgray',
+    width: 250,
   },
 });

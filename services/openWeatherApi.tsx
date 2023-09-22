@@ -3,7 +3,7 @@
 const getWeather = async (city: string) => {
   try {
     const response = await fetch(
-      `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=7425272eb22af607e6aaf2c4134b945e`,
+      `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=7425272eb22af607e6aaf2c4134b945e&lang=fr`,
     );
 
     if (!response.ok) {
