@@ -1,7 +1,14 @@
 import {TextInput} from '@react-native-material/core';
 import {useNavigation} from '@react-navigation/native';
 import {useEffect, useState} from 'react';
-import {Button, Pressable, StyleSheet, Text, View} from 'react-native';
+import {
+  Button,
+  FlatList,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import getWeather from '../services/openWeatherApi';
 import getPlaces from '../services/countriesNowApi';
 
@@ -75,18 +82,18 @@ const Search = () => {
           <Pressable style={styles.button} onPress={handleSearch}>
             <Text style={styles.textButton}>Rechercher</Text>
           </Pressable>
-          {/* MES SUGGESTIONS */}
           {suggestions.length > 0 && (
-            <View style={styles.suggestionsContainer}>
-              {suggestions.map(suggestion => (
+            <FlatList
+              data={suggestions}
+              keyExtractor={(item: any) => item.toString()}
+              renderItem={({item}: any) => (
                 <Pressable
-                  key={suggestion}
                   style={styles.suggestionItem}
-                  onPress={() => handleSuggestionSelect(suggestion)}>
-                  <Text>{suggestion}</Text>
+                  onPress={() => handleSuggestionSelect(item)}>
+                  <Text>{item}</Text>
                 </Pressable>
-              ))}
-            </View>
+              )}
+            />
           )}
         </View>
       </View>
