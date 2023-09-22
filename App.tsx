@@ -28,7 +28,7 @@ import Homepage from './pages/Home';
 import Search from './pages/Search';
 import Results from './pages/Results';
 import Splashscreen from './pages/Splashcreen';
-import Data from './services/Api';
+import Data from './services/openWeatherApi';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';

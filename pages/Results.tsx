@@ -42,8 +42,7 @@ const Results = ({route}: any) => {
           contentContainerStyle={styles.galleryContent}
           snapToAlignment="start"
           decelerationRate="fast"
-          snapToInterval={150} // Largeur d'une prévision météo
-        >
+          snapToInterval={150}>
           {Object.entries(groupedWeatherData).map(
             ([date, weatherDataByDay]) => (
               <View key={date} style={styles.weatherCard}>

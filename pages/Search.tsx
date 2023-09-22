@@ -1,13 +1,51 @@
 import {TextInput} from '@react-native-material/core';
 import {useNavigation} from '@react-navigation/native';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {Button, Pressable, StyleSheet, Text, View} from 'react-native';
-import getWeather from '../services/Api';
+import getWeather from '../services/openWeatherApi';
+import getPlaces from '../services/countriesNowApi';
 
 const Search = () => {
   const {navigate}: any = useNavigation();
 
   const [city, setCity] = useState('');
+  const [citiesList, setCitiesList] = useState('');
+  const [suggestions, setSuggestions] = useState([]);
+
+  const fetchCitiesList = async () => {
+    try {
+      const data = await getPlaces(city.toUpperCase());
+      console.log('Fetch City List:', data);
+      const cityNames = data.map((entry: any) => entry.city);
+      setCitiesList(cityNames);
+    } catch (error) {
+      console.error('Erreur lors de la récupération des villes :', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchCitiesList();
+  }, [city]);
+
+  const handleInputChange = async (text: any) => {
+    setCity(text);
+
+    try {
+      const data = await getPlaces(text.toUpperCase());
+      const cityNames = data.map((entry: any) => entry.city);
+      setSuggestions(cityNames);
+    } catch (error) {
+      console.error(
+        'Erreur lors de la récupération des suggestions de villes :',
+        error,
+      );
+    }
+  };
+
+  const handleSuggestionSelect = (selectedCity: any) => {
+    setCity(selectedCity);
+    setSuggestions([]);
+  };
 
   const handleSearch = async () => {
     try {
@@ -30,13 +68,26 @@ const Search = () => {
           <TextInput
             placeholder="Entrez le nom de la ville"
             value={city}
-            onChangeText={setCity}
+            onChangeText={handleInputChange}
             style={styles.input}
-            onSubmitEditing={handleSubmit} // Utilisez onSubmitEditing pour détecter la touche "Entrée"
+            onSubmitEditing={handleSubmit}
           />
           <Pressable style={styles.button} onPress={handleSearch}>
             <Text style={styles.textButton}>Rechercher</Text>
           </Pressable>
+          {/* MES SUGGESTIONS */}
+          {suggestions.length > 0 && (
+            <View style={styles.suggestionsContainer}>
+              {suggestions.map(suggestion => (
+                <Pressable
+                  key={suggestion}
+                  style={styles.suggestionItem}
+                  onPress={() => handleSuggestionSelect(suggestion)}>
+                  <Text>{suggestion}</Text>
+                </Pressable>
+              ))}
+            </View>
+          )}
         </View>
       </View>
     </>
@@ -82,5 +133,24 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     padding: 10,
     textAlign: 'center',
+  },
+  suggestionsContainer: {
+    position: 'absolute',
+    top: 60,
+    left: 10,
+    width: '90%',
+    backgroundColor: 'white',
+    zIndex: 1,
+    borderRadius: 5,
+    elevation: 4,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+  },
+  suggestionItem: {
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: 'lightgray',
   },
 });

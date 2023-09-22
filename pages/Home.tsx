@@ -10,19 +10,20 @@ import {
 } from 'react-native';
 import Layout from '../components/Layout';
 import {useNavigation} from '@react-navigation/native';
-import getWeather from '../services/Api'; // Assurez-vous que le chemin d'importation est correct
+import getWeather from '../services/openWeatherApi';
+import getPlaces from '../services/countriesNowApi';
 import React, {useState, useEffect} from 'react';
 
 const Homepage = () => {
   const [weatherData, setWeatherData] = useState<any>(null);
+  const [cityData, setCityData] = useState<any>(null);
 
   const {navigate}: any = useNavigation();
 
   useEffect(() => {
     const fetchWeatherData = async () => {
       try {
-        const data = await getWeather('Bordeaux'); // Remplacez par la ville de Bordeaux si nécessaire
-        console.log('Données météorologiques :', data);
+        const data = await getWeather('Bordeaux');
         setWeatherData(data);
       } catch (error) {
         console.error(
@@ -33,6 +34,19 @@ const Homepage = () => {
     };
 
     fetchWeatherData();
+  }, []);
+
+  useEffect(() => {
+    const fetchCityData = async () => {
+      try {
+        const cityName = 'Paris';
+        const data = await getPlaces(cityName.toUpperCase());
+        console.log('Ville :', data.city);
+      } catch (error) {
+        console.error('Erreur lors de la récupération de la ville :', error);
+      }
+    };
+    fetchCityData();
   }, []);
 
   return (
