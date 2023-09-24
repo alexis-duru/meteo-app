@@ -16,8 +16,11 @@ const getPlaces = async (cityName: any) => {
       throw new Error(`La ville ${cityName} n'a pas été trouvée.`);
     }
 
-    const cityNames = data.map((entry: any) => entry.nom);
-    return cityNames;
+    const cities = data.map((entry: any) => ({
+      name: entry.nom,
+      postalCode: entry.codesPostaux[0],
+    }));
+    return cities;
   } catch (error) {
     console.error(
       'Erreur lors de la récupération des suggestions de villes :',

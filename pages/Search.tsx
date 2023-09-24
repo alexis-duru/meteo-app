@@ -9,14 +9,20 @@ import {
   Text,
   View,
 } from 'react-native';
-import getPlaces from '../services/geoGouvApi'; // Importez les fonctions depuis api.js
-import getWeather from '../services/openWeatherApi'; // Importez les fonctions depuis api.js
+import getPlaces from '../services/geoGouvApi';
+import getWeather from '../services/openWeatherApi';
+
+interface CitySuggestion {
+  name: string;
+  postalCode: string;
+}
 
 const Search = () => {
   const {navigate}: any = useNavigation();
 
   const [city, setCity] = useState('');
-  const [suggestions, setSuggestions] = useState([]);
+  const [postalCode, setPostalCode] = useState('');
+  const [suggestions, setSuggestions] = useState<CitySuggestion[]>([]); // Utilisez l'interface CitySuggestion
 
   const fetchCitiesList = async (cityName: string) => {
     try {
@@ -38,8 +44,12 @@ const Search = () => {
     }
   }, [city]);
 
-  const handleSuggestionSelect = async (selectedCity: string) => {
+  const handleSuggestionSelect = async (
+    selectedCity: string,
+    postalCode: string,
+  ) => {
     setCity(selectedCity);
+    setPostalCode(postalCode);
     setSuggestions([]);
     await handleSearch();
   };
@@ -48,7 +58,7 @@ const Search = () => {
     try {
       const data = await getWeather(city);
       console.log('Données météorologiques :', data);
-      navigate('RESULTS', {weatherData: data});
+      navigate('RESULTS', {weatherData: data, postalCode: postalCode});
     } catch (error) {
       console.error('Erreur lors de la recherche de météo :', error);
     }
@@ -69,19 +79,20 @@ const Search = () => {
             style={styles.input}
             onSubmitEditing={handleSubmit}
           />
-          {/* <Pressable style={styles.button} onPress={handleSearch}>
-            <Text style={styles.textButton}>Rechercher</Text>
-          </Pressable> */}
           {suggestions.length > 0 && (
             <FlatList
-              data={suggestions.map((item, index) => ({item, index}))} // Créez une liste d'objets avec index
-              keyExtractor={item => `${item.item}-${item.index}`} // Utilisez la combinaison de nom de ville et d'index unique comme clé
-              renderItem={({item}: {item: {item: string; index: number}}) => (
+              data={suggestions}
+              keyExtractor={item => `${item.name}-${item.postalCode}`} // Utilisez une clé unique
+              renderItem={({item}) => (
                 <Pressable
-                  key={`${item.item}-${item.index}`} // Assurez-vous que la clé est unique
+                  key={`${item.name}-${item.postalCode}`}
                   style={styles.suggestionItem}
-                  onPress={() => handleSuggestionSelect(item.item)}>
-                  <Text>{item.item}</Text>
+                  onPress={() =>
+                    handleSuggestionSelect(item.name, item.postalCode)
+                  }>
+                  <Text>
+                    {item.name}, {item.postalCode}
+                  </Text>
                 </Pressable>
               )}
             />
