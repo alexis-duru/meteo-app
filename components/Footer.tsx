@@ -11,7 +11,6 @@ const Footer: React.FC = () => {
 
 const styles = StyleSheet.create({
   footer: {
-    backgroundColor: 'lightgray',
     padding: 10,
   },
 });

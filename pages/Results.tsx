@@ -3,11 +3,9 @@ import {View, Text, Image, StyleSheet, ScrollView} from 'react-native';
 import formatedDateToFrench from '../utils/formatedDateToFrench';
 
 const Results = ({route}: any) => {
-  const {weatherData, postalCode} = route.params;
+  const {weatherData} = route.params;
 
   console.log('Données météorologiques :', weatherData);
-
-  console.log('Code postal :', postalCode);
 
   const groupDataByDay = (data: any[]) => {
     const groupedData: {[key: string]: any[]} = {};
@@ -32,8 +30,6 @@ const Results = ({route}: any) => {
     <View style={styles.container}>
       <View style={styles.wrapperWeatherDay}>
         <Text>Ville: {weatherData.city.name}</Text>
-        <Text>Code Postal: {postalCode}</Text>
-        <Text>Pays: {weatherData.city.country}</Text>
         <Text>Date: {formatedDateToFrench(weatherData.list[0].dt_txt)}</Text>
         <Text>
           Température: {(weatherData.list[0].main.temp - 273.15).toFixed(2)} °C
@@ -125,7 +121,6 @@ const styles = StyleSheet.create({
     scrollSnapType: 'x mandatory',
     maxHeight: 200,
   },
-
   wrapperWeatherDay: {
     height: '50%',
     width: '100%',
@@ -140,7 +135,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-end',
   },
-
   weatherCard: {
     width: 150,
     padding: 10,

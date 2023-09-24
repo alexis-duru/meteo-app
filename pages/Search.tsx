@@ -1,14 +1,7 @@
 import {TextInput} from '@react-native-material/core';
 import {useNavigation} from '@react-navigation/native';
 import {useEffect, useState} from 'react';
-import {
-  Button,
-  FlatList,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import {FlatList, Pressable, StyleSheet, Text, View} from 'react-native';
 import getPlaces from '../services/geoGouvApi';
 import getWeather from '../services/openWeatherApi';
 
@@ -22,7 +15,8 @@ const Search = () => {
 
   const [city, setCity] = useState('');
   const [postalCode, setPostalCode] = useState('');
-  const [suggestions, setSuggestions] = useState<CitySuggestion[]>([]); // Utilisez l'interface CitySuggestion
+  const [suggestions, setSuggestions] = useState<CitySuggestion[]>([]);
+  const [recentCities, setRecentCities] = useState<string[]>([]);
 
   const fetchCitiesList = async (cityName: string) => {
     try {
@@ -58,7 +52,11 @@ const Search = () => {
     try {
       const data = await getWeather(city);
       console.log('Données météorologiques :', data);
-      navigate('RESULTS', {weatherData: data, postalCode: postalCode});
+
+      const updatedRecentCities = [city, ...recentCities].slice(0, 5);
+      setRecentCities(updatedRecentCities);
+
+      navigate('RESULTS', {weatherData: data});
     } catch (error) {
       console.error('Erreur lors de la recherche de météo :', error);
     }
@@ -66,6 +64,12 @@ const Search = () => {
 
   const handleSubmit = () => {
     handleSearch();
+  };
+
+  const handleRecentCityPress = async (selectedCity: string) => {
+    setCity(selectedCity);
+    setSuggestions([]);
+    await handleSearch();
   };
 
   return (
@@ -81,8 +85,9 @@ const Search = () => {
           />
           {suggestions.length > 0 && (
             <FlatList
+              style={styles.flatList}
               data={suggestions}
-              keyExtractor={item => `${item.name}-${item.postalCode}`} // Utilisez une clé unique
+              keyExtractor={item => `${item.name}-${item.postalCode}`}
               renderItem={({item}) => (
                 <Pressable
                   key={`${item.name}-${item.postalCode}`}
@@ -98,6 +103,19 @@ const Search = () => {
             />
           )}
         </View>
+        <View style={styles.recentCitiesContainer}>
+          <Text style={styles.recentCitiesTitle}>
+            Villes recherchées récemment :
+          </Text>
+          {recentCities.map((recentCity, index) => (
+            <Pressable
+              key={index}
+              style={styles.recentCityCard}
+              onPress={() => handleRecentCityPress(recentCity)}>
+              <Text>{recentCity}</Text>
+            </Pressable>
+          ))}
+        </View>
       </View>
     </>
   );
@@ -110,7 +128,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'flex-start',
-    backgroundColor: 'lightblue',
   },
   wrapperBtn: {
     width: '100%',
@@ -119,10 +136,16 @@ const styles = StyleSheet.create({
   },
 
   input: {
-    width: 250,
+    width: 270,
     height: 50,
     marginVertical: 10,
     paddingHorizontal: 10,
+    borderRadius: 5,
+    backgroundColor: 'transparent',
+  },
+  flatList: {
+    width: 250,
+    maxHeight: 200,
     backgroundColor: 'white',
     borderRadius: 5,
   },
@@ -145,5 +168,24 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: 'lightgray',
     width: 250,
+  },
+  recentCitiesContainer: {
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'flex-start', // Alignez les éléments en haut
+    marginTop: 20,
+  },
+  recentCitiesTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  recentCityCard: {
+    width: '100%', // Utilisez toute la largeur de l'écran
+    height: 50,
+    backgroundColor: 'lightgray',
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginVertical: 5, // Marge verticale entre les cartes
   },
 });

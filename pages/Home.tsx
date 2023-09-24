@@ -5,13 +5,12 @@ import {
   Text,
   View,
   StyleSheet,
-  Button,
   Image,
 } from 'react-native';
 import Layout from '../components/Layout';
 import {useNavigation} from '@react-navigation/native';
 import getWeather from '../services/openWeatherApi';
-import getPlaces from '../services/geoGouvApi';
+// import getPlaces from '../services/geoGouvApi';
 import React, {useState, useEffect} from 'react';
 import formatedDateToFrench from '../utils/formatedDateToFrench';
 
