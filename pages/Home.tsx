@@ -6,18 +6,18 @@ import {
   View,
   StyleSheet,
   Image,
+  ImageBackground,
 } from 'react-native';
 import Layout from '../components/Layout';
 import {useNavigation} from '@react-navigation/native';
 import getWeather from '../services/openWeatherApi';
-// import getPlaces from '../services/geoGouvApi';
 import React, {useState, useEffect} from 'react';
 import formatedDateToFrench from '../utils/formatedDateToFrench';
 
 const Homepage = () => {
+  const image = require('../public/assets/images/splashscreen/splashscreen.jpg');
+
   const [weatherData, setWeatherData] = useState<any>(null);
-  const [cityData, setCityData] = useState<any>(null);
-  const {navigate}: any = useNavigation();
 
   useEffect(() => {
     const fetchWeatherData = async () => {
@@ -39,59 +39,83 @@ const Homepage = () => {
   return (
     <>
       <Layout>
-        <SafeAreaView>
-          <StatusBar />
-          <ScrollView contentInsetAdjustmentBehavior="automatic">
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Home</Text>
-              {weatherData ? (
-                <>
-                  <Text>Ville: {weatherData.city.name}</Text>
-                  <Text>
-                    Date: {formatedDateToFrench(weatherData.list[0].dt_txt)}
-                  </Text>
-                  <Text>
-                    {' '}
-                    Température:{' '}
-                    {(weatherData.list[0].main.temp - 273.15).toFixed(2)} °C
-                  </Text>
-                  <Text>
-                    Météo: {weatherData.list[0].weather[0].description}
-                  </Text>
-                  <Image
-                    source={{
-                      uri: `https://openweathermap.org/img/w/${weatherData.list[0].weather[0].icon}.png`,
-                    }}
-                    style={{width: 50, height: 50}}
-                  />
-                </>
-              ) : (
-                <Text>Chargement des données météorologiques...</Text>
-              )}
-            </View>
-          </ScrollView>
-        </SafeAreaView>
+        <ImageBackground source={image} resizeMode="cover" style={styles.image}>
+          <View style={styles.overlay}></View>
+
+          <View style={styles.wrapper}>
+            {weatherData ? (
+              <>
+                <Text style={styles.time}>
+                  {formatedDateToFrench(weatherData.list[0].dt_txt)}
+                </Text>
+                <Text style={styles.title}>{weatherData.city.name}</Text>
+                <Text style={styles.subtitle}>
+                  {(weatherData.list[0].main.temp - 273.15).toFixed(2)} °C
+                </Text>
+                <Text style={styles.infos}>
+                  {weatherData.list[0].weather[0].description}
+                </Text>
+              </>
+            ) : (
+              <Text>Chargement des données météorologiques...</Text>
+            )}
+          </View>
+        </ImageBackground>
       </Layout>
     </>
   );
 };
 
 const styles = StyleSheet.create({
-  sectionContainer: {
-    paddingHorizontal: 24,
-    height: 600,
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0,0,0,0.4)',
+  },
+  image: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'contain',
+    marginBottom: 10,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    position: 'relative',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  container: {
+    height: '100%',
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  wrapper: {
     alignItems: 'center',
     justifyContent: 'center',
+    height: '100%',
+    width: '100%',
   },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-    color: 'blue',
+  title: {
+    fontSize: 40,
+    fontWeight: '200',
+    color: 'white',
   },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
+  subtitle: {
+    fontSize: 60,
+    color: 'white',
+    textAlign: 'center',
+    fontWeight: '300',
+  },
+  time: {
+    fontSize: 15,
+    color: 'white',
+    textAlign: 'center',
     fontWeight: '400',
+  },
+  infos: {
+    fontSize: 20,
+    color: 'white',
+    textAlign: 'center',
+    fontWeight: '300',
   },
 });
 

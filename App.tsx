@@ -54,9 +54,9 @@ function App(): JSX.Element {
           headerShown: false,
         }}>
         <Tab.Screen name="SPLASHSCREEN" component={Splashscreen} />
-        <Tab.Screen name="HOME" component={Homepage} />
-        <Tab.Screen name="SEARCH" component={Search} />
-        <Tab.Screen name="RESULTS" component={Results} />
+        <Tab.Screen name="ACCUEIL" component={Homepage} />
+        <Tab.Screen name="RECHERCHE" component={Search} />
+        <Tab.Screen name="RÉSULTAT" component={Results} />
       </Tab.Navigator>
     </NavigationContainer>
   );

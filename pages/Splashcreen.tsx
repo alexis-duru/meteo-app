@@ -7,30 +7,28 @@ const Splashscreen = () => {
   const {navigate}: any = useNavigation();
 
   return (
-    <View style={styles.container}>
-      <ImageBackground source={image} resizeMode="cover" style={styles.image}>
+    <ImageBackground source={image} resizeMode="cover" style={styles.image}>
+      <View style={styles.container}>
         <View style={styles.overlay}></View>
-        <Text style={styles.title}>DAILY WEATHER</Text>
-        <Text style={styles.subtitle}>
-          Get To Know Your Weather Maps and radar precipitation forcast
-        </Text>
-        <Pressable style={styles.button} onPress={() => navigate('HOME')}>
-          <Text style={styles.textButton}>Get Started</Text>
+        <Text style={styles.title}>METEO APP</Text>
+        <Text style={styles.subtitle}>La météo de votre ville</Text>
+        <Pressable style={styles.button} onPress={() => navigate('ACCUEIL')}>
+          <Text style={styles.textButton}>Commencer</Text>
         </Pressable>
-      </ImageBackground>
-    </View>
+      </View>
+    </ImageBackground>
   );
 };
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#fff',
+    height: '100%',
+    width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0,0,0,0.5)',
+    backgroundColor: 'rgba(0,0,0,0.4)',
   },
   image: {
     width: '100%',
@@ -45,7 +43,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: '300',
     color: 'white',
     marginBottom: 10,
   },
@@ -56,14 +54,15 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: '#ffffff',
-    padding: 10,
-    borderRadius: 5,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 25,
     marginBottom: 10,
     marginTop: 20,
   },
   textButton: {
     color: '#000000',
-    fontSize: 18,
+    fontSize: 14,
     fontWeight: 'bold',
   },
 });

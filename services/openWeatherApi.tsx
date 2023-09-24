@@ -1,5 +1,3 @@
-// CALL API OPENWEATHERMAP
-
 const getWeather = async (city: string) => {
   try {
     const response = await fetch(

@@ -1,8 +1,18 @@
 import React from 'react';
-import {View, Text, Image, StyleSheet, ScrollView} from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  ScrollView,
+  ImageBackground,
+} from 'react-native';
 import formatedDateToFrench from '../utils/formatedDateToFrench';
+import Layout from '../components/Layout';
 
 const Results = ({route}: any) => {
+  const image = require('../public/assets/images/splashscreen/splashscreen.jpg');
+
   const {weatherData} = route.params;
 
   console.log('Données météorologiques :', weatherData);
@@ -27,22 +37,26 @@ const Results = ({route}: any) => {
   const todayWeatherData = groupedWeatherData[today];
 
   return (
-    <View style={styles.container}>
-      <View style={styles.wrapperWeatherDay}>
-        <Text>Ville: {weatherData.city.name}</Text>
-        <Text>Date: {formatedDateToFrench(weatherData.list[0].dt_txt)}</Text>
-        <Text>
-          Température: {(weatherData.list[0].main.temp - 273.15).toFixed(2)} °C
-        </Text>
-        <Text>Météo: {weatherData.list[0].weather[0].description}</Text>
-        <Image
-          source={{
-            uri: `https://openweathermap.org/img/w/${weatherData.list[0].weather[0].icon}.png`,
-          }}
-          style={{width: 50, height: 50}}
-        />
-      </View>
-      {/* <View style={styles.wrapperWeatherNextDays}>
+    <Layout>
+      <ImageBackground source={image} resizeMode="cover" style={styles.image}>
+        <View style={styles.overlay}></View>
+        <View style={styles.container}>
+          <View style={styles.wrapperWeatherDay}>
+            <Text style={styles.time}>
+              {formatedDateToFrench(weatherData.list[0].dt_txt)}
+            </Text>
+            <Text style={styles.title}>{weatherData.city.name}</Text>
+            <Text style={styles.subtitle}>
+              {(weatherData.list[0].main.temp - 273.15).toFixed(2)} °C
+            </Text>
+            <Image
+              source={{
+                uri: `https://openweathermap.org/img/w/${weatherData.list[0].weather[0].icon}.png`,
+              }}
+              style={{width: 50, height: 50}}
+            />
+          </View>
+          {/* <View style={styles.wrapperWeatherNextDays}>
         <Text>Météo heure par heure pour aujourd'hui</Text>
         <ScrollView
           horizontal
@@ -68,40 +82,59 @@ const Results = ({route}: any) => {
           ))}
         </ScrollView>
       </View> */}
-      <View style={styles.wrapperWeatherNextDays}>
-        <Text>Prévisions météo pour les 7 prochains jours</Text>
-        <ScrollView
-          horizontal
-          style={styles.galleryContainer}
-          contentContainerStyle={styles.galleryContent}
-          snapToAlignment="start"
-          decelerationRate="fast"
-          snapToInterval={150}>
-          {Object.entries(groupedWeatherData).map(
-            ([date, weatherDataByDay]) => (
-              <View key={date} style={styles.weatherCard}>
-                <Text>Date: {date}</Text>
-                <Text>
-                  Température:{' '}
-                  {(weatherDataByDay[0].main.temp - 273.15).toFixed(2)} °C
-                </Text>
-                <Text>Météo: {weatherDataByDay[0].weather[0].description}</Text>
-                <Image
-                  source={{
-                    uri: `https://openweathermap.org/img/w/${weatherDataByDay[0].weather[0].icon}.png`,
-                  }}
-                  style={{width: 50, height: 50}}
-                />
-              </View>
-            ),
-          )}
-        </ScrollView>
-      </View>
-    </View>
+          <View style={styles.wrapperWeatherNextDays}>
+            <Text>Prévisions météo pour les 7 prochains jours</Text>
+            <ScrollView
+              horizontal
+              style={styles.galleryContainer}
+              contentContainerStyle={styles.galleryContent}
+              snapToAlignment="start"
+              decelerationRate="fast"
+              snapToInterval={150}>
+              {Object.entries(groupedWeatherData).map(
+                ([date, weatherDataByDay]) => (
+                  <View key={date} style={styles.weatherCard}>
+                    <Text>Date: {date}</Text>
+                    <Text>
+                      Température:{' '}
+                      {(weatherDataByDay[0].main.temp - 273.15).toFixed(2)} °C
+                    </Text>
+                    <Text>
+                      Météo: {weatherDataByDay[0].weather[0].description}
+                    </Text>
+                    <Image
+                      source={{
+                        uri: `https://openweathermap.org/img/w/${weatherDataByDay[0].weather[0].icon}.png`,
+                      }}
+                      style={{width: 50, height: 50}}
+                    />
+                  </View>
+                ),
+              )}
+            </ScrollView>
+          </View>
+        </View>
+      </ImageBackground>
+    </Layout>
   );
 };
 
 const styles = StyleSheet.create({
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0,0,0,0.4)',
+  },
+  image: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'contain',
+    marginBottom: 10,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    position: 'relative',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   container: {
     flex: 1,
     justifyContent: 'center',
@@ -142,6 +175,29 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginEnd: 10,
     scrollSnapAlign: 'start',
+  },
+  title: {
+    fontSize: 40,
+    fontWeight: '200',
+    color: 'white',
+  },
+  subtitle: {
+    fontSize: 60,
+    color: 'white',
+    textAlign: 'center',
+    fontWeight: '300',
+  },
+  time: {
+    fontSize: 15,
+    color: 'white',
+    textAlign: 'center',
+    fontWeight: '400',
+  },
+  infos: {
+    fontSize: 20,
+    color: 'white',
+    textAlign: 'center',
+    fontWeight: '300',
   },
 });
 
