@@ -1,13 +1,4 @@
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  Text,
-  View,
-  StyleSheet,
-  Image,
-  ImageBackground,
-} from 'react-native';
+import {Text, View, StyleSheet, Image, ImageBackground} from 'react-native';
 import Layout from '../components/Layout';
 import {useNavigation} from '@react-navigation/native';
 import getWeather from '../services/openWeatherApi';
@@ -50,10 +41,13 @@ const Homepage = () => {
                 </Text>
                 <Text style={styles.title}>{weatherData.city.name}</Text>
                 <Text style={styles.subtitle}>
-                  {(weatherData.list[0].main.temp - 273.15).toFixed(2)} °C
+                  {Math.round(weatherData.list[0].main.temp)} °C
                 </Text>
                 <Text style={styles.infos}>
-                  {weatherData.list[0].weather[0].description}
+                  {weatherData.list[0].weather[0].description
+                    .charAt(0)
+                    .toUpperCase() +
+                    weatherData.list[0].weather[0].description.slice(1)}
                 </Text>
               </>
             ) : (

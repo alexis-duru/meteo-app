@@ -32,6 +32,7 @@ import Data from './services/openWeatherApi';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {ScreenContainer} from 'react-native-screens';
 
 const Stack = createNativeStackNavigator();
 

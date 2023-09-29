@@ -1,3 +1,5 @@
+# REPO GITHUB : https://github.com/alexis-duru/meteo-app
+
 This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
 
 # Getting Started
@@ -83,35 +85,3 @@ To learn more about React Native, take a look at the following resources:
 # yarn start
 
 # yarn ios
-
-# Equivalent du div est VIEW
-
-# Equivalent du span est TEXT
-
-# Equivalent du button est TOUCHABLEOPACITY
-
-# Equivalent du input est TEXTINPUT
-
-# Equivalent du form est VIEW
-
-# Equivalent du label est TEXT
-
-# Equivalent du select est PICKER
-
-# Equivalent du option est PICKER.ITEM
-
-# Equivalent du checkbox est SWITCH
-
-# Equivalent du radio est SWITCH
-
-# Equivalent du textarea est TEXTINPUT
-
-# Equivalent du img est IMAGE
-
-# Equivalent du a est TOUCHABLEOPACITY
-
-# Equivalent du ul est VIEW
-
-# Equivalent du li est VIEW
-
-# Equivalent du table est VIEW

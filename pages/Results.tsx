@@ -47,7 +47,7 @@ const Results = ({route}: any) => {
             </Text>
             <Text style={styles.title}>{weatherData.city.name}</Text>
             <Text style={styles.subtitle}>
-              {(weatherData.list[0].main.temp - 273.15).toFixed(2)} °C
+              {Math.round(weatherData.list[0].main.temp)} °C
             </Text>
             <Image
               source={{
@@ -56,34 +56,41 @@ const Results = ({route}: any) => {
               style={{width: 50, height: 50}}
             />
           </View>
-          {/* <View style={styles.wrapperWeatherNextDays}>
-        <Text>Météo heure par heure pour aujourd'hui</Text>
-        <ScrollView
-          horizontal
-          style={styles.galleryContainer}
-          contentContainerStyle={styles.galleryContent}
-          snapToAlignment="start"
-          decelerationRate="fast"
-          snapToInterval={150}>
-          {todayWeatherData.map((hourlyWeather: any, index: number) => (
-            <View key={index} style={styles.weatherCard}>
-              <Text>Heure: {hourlyWeather.dt_txt.split(' ')[1]}</Text>
-              <Text>
-                Température: {(hourlyWeather.main.temp - 273.15).toFixed(2)} °C
-              </Text>
-              <Text>Météo: {hourlyWeather.weather[0].description}</Text>
-              <Image
-                source={{
-                  uri: `https://openweathermap.org/img/w/${hourlyWeather.weather[0].icon}.png`,
-                }}
-                style={{width: 50, height: 50}}
-              />
-            </View>
-          ))}
-        </ScrollView>
-      </View> */}
           <View style={styles.wrapperWeatherNextDays}>
-            <Text>Prévisions météo pour les 7 prochains jours</Text>
+            <Text style={styles.sm__title}>Heure par heure</Text>
+            <ScrollView
+              horizontal
+              style={styles.galleryContainer}
+              contentContainerStyle={styles.galleryContent}
+              snapToAlignment="start"
+              decelerationRate="fast"
+              snapToInterval={150}>
+              {todayWeatherData.map((hourlyWeather: any, index: number) => (
+                <View key={index} style={styles.weatherCard}>
+                  <Text style={(styles.nextInfos, styles.nextInfos__sm)}>
+                    {hourlyWeather.dt_txt.split(' ')[1]}
+                  </Text>
+                  <Text style={styles.nextInfos}>
+                    {Math.round(hourlyWeather.main.temp)} °C
+                  </Text>
+                  <Text style={(styles.nextInfos, styles.nextInfos__sm)}>
+                    {hourlyWeather.weather[0].description
+                      .charAt(0)
+                      .toUpperCase() +
+                      hourlyWeather.weather[0].description.slice(1)}
+                  </Text>
+                  <Image
+                    source={{
+                      uri: `https://openweathermap.org/img/w/${hourlyWeather.weather[0].icon}.png`,
+                    }}
+                    style={{width: 30, height: 30}}
+                  />
+                </View>
+              ))}
+            </ScrollView>
+          </View>
+          <View style={styles.wrapperWeatherNextDays}>
+            <Text style={styles.sm__title}>Les 7 prochains jours</Text>
             <ScrollView
               horizontal
               style={styles.galleryContainer}
@@ -94,19 +101,23 @@ const Results = ({route}: any) => {
               {Object.entries(groupedWeatherData).map(
                 ([date, weatherDataByDay]) => (
                   <View key={date} style={styles.weatherCard}>
-                    <Text>Date: {date}</Text>
-                    <Text>
-                      Température:{' '}
-                      {(weatherDataByDay[0].main.temp - 273.15).toFixed(2)} °C
+                    <Text style={(styles.nextInfos, styles.nextInfos__sm)}>
+                      {formatedDateToFrench(weatherDataByDay[0].dt_txt)}
                     </Text>
-                    <Text>
-                      Météo: {weatherDataByDay[0].weather[0].description}
+                    <Text style={styles.nextInfos}>
+                      {Math.round(weatherDataByDay[0].main.temp)} °C
+                    </Text>
+                    <Text style={(styles.nextInfos, styles.nextInfos__sm)}>
+                      {weatherDataByDay[0].weather[0].description
+                        .charAt(0)
+                        .toUpperCase() +
+                        weatherDataByDay[0].weather[0].description.slice(1)}
                     </Text>
                     <Image
                       source={{
                         uri: `https://openweathermap.org/img/w/${weatherDataByDay[0].weather[0].icon}.png`,
                       }}
-                      style={{width: 50, height: 50}}
+                      style={{width: 30, height: 30}}
                     />
                   </View>
                 ),
@@ -140,6 +151,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     height: '100%',
+    width: '100%',
+    paddingTop: 40,
   },
   galleryContainer: {
     marginTop: 20,
@@ -150,39 +163,51 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingStart: 20,
     paddingEnd: 20,
-    paddingBottom: 20,
     scrollSnapType: 'x mandatory',
-    maxHeight: 200,
+    maxHeight: 150,
   },
   wrapperWeatherDay: {
-    height: '50%',
+    height: 170,
     width: '100%',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    scrollBarWidth: 'none',
   },
   wrapperWeatherNextDays: {
-    height: '50%',
-    marginTop: 20,
+    height: 200,
     display: 'flex',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     justifyContent: 'flex-end',
+    paddingStart: 20,
   },
   weatherCard: {
     width: 150,
+    height: 120,
     padding: 10,
-    border: '1px solid lightgray',
     borderRadius: 5,
     marginEnd: 10,
     scrollSnapAlign: 'start',
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    boxShadow: '0 0 10px rgba(0,0,0,0.2)',
+    borderWidth: 0.5,
+    borderColor: 'rgba(255,255,255,0.5)',
+  },
+  sm__title: {
+    fontSize: 20,
+    color: 'white',
+    textAlign: 'left',
+    fontWeight: '300',
   },
   title: {
-    fontSize: 40,
+    fontSize: 30,
     fontWeight: '200',
     color: 'white',
   },
   subtitle: {
-    fontSize: 60,
+    fontSize: 50,
     color: 'white',
     textAlign: 'center',
     fontWeight: '300',
@@ -195,6 +220,20 @@ const styles = StyleSheet.create({
   },
   infos: {
     fontSize: 20,
+    color: 'white',
+    textAlign: 'center',
+    fontWeight: '300',
+  },
+  nextInfos: {
+    fontSize: 15,
+    marginBottom: 5,
+    color: 'white',
+    textAlign: 'center',
+    fontWeight: '300',
+  },
+  nextInfos__sm: {
+    fontSize: 12,
+    marginBottom: 5,
     color: 'white',
     textAlign: 'center',
     fontWeight: '300',
