@@ -1,7 +1,6 @@
 import React, {ReactNode} from 'react';
 import {View, StyleSheet} from 'react-native';
-import Header from './Header';
-import Footer from './Footer';
+import Navigation from './Navigation';
 
 interface LayoutProps {
   children: ReactNode;
@@ -10,8 +9,8 @@ interface LayoutProps {
 const Layout: React.FC<LayoutProps> = ({children}) => {
   return (
     <View style={styles.container}>
-      {/* <Header /> */}
       <View style={styles.content}>{children}</View>
+      <Navigation />
     </View>
   );
 };
