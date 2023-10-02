@@ -15,8 +15,6 @@ const Results = ({route}: any) => {
 
   const {weatherData} = route.params;
 
-  console.log('Données météorologiques :', weatherData);
-
   const groupDataByDay = (data: any[]) => {
     const groupedData: {[key: string]: any[]} = {};
 
@@ -164,10 +162,10 @@ const styles = StyleSheet.create({
     paddingStart: 20,
     paddingEnd: 20,
     scrollSnapType: 'x mandatory',
-    maxHeight: 150,
+    maxHeight: 120,
   },
   wrapperWeatherDay: {
-    height: 170,
+    height: 140,
     width: '100%',
     display: 'flex',
     alignItems: 'center',
@@ -205,6 +203,8 @@ const styles = StyleSheet.create({
     fontSize: 30,
     fontWeight: '200',
     color: 'white',
+    width: '100%',
+    textAlign: 'center',
   },
   subtitle: {
     fontSize: 50,
