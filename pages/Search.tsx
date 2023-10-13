@@ -148,7 +148,7 @@ const Search = () => {
                   <Pressable
                     style={styles.clearButton}
                     onPress={handleClearRecentCities}>
-                    <Text style={styles.clearButtonText}>Clear</Text>
+                    <Text style={styles.clearButtonText}>TOUT SUPPRIMER</Text>
                   </Pressable>
                 </>
               )}
