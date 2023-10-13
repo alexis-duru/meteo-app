@@ -6,7 +6,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Homepage from './pages/Home';
 import Search from './pages/Search';
 import Results from './pages/Results';
-import Splashscreen from './pages/Splashcreen';
+import Splashscreen from './pages/Splashscreen';
 import Footer from './components/Navigation';
 
 const Stack = createNativeStackNavigator();
